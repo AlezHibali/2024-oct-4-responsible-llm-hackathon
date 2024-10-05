@@ -1,6 +1,10 @@
 import React from 'react';
 
-const DynamicTable = ({ data }) => {
+interface DynamicTableProps {
+  data: Array<{ [key: string]: any }>;
+}
+
+const DynamicTable: React.FC<DynamicTableProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return <p>No data available</p>;
   }

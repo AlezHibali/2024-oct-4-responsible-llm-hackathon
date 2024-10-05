@@ -4,7 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DatabaseIcon } from 'lucide-react';
 
-export default function EnhancedDBConnectionUI({ dbURL, setDbURL, handleDbSubmit, onKeyDown }) {
+interface EnhancedDBConnectionUIProps {
+  dbURL: string;
+  setDbURL: (url: string) => void;
+  handleDbSubmit: () => void;
+  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+export default function EnhancedDBConnectionUI({ dbURL, setDbURL, handleDbSubmit, onKeyDown }: EnhancedDBConnectionUIProps) {
   return (
     <div className="relative mt-4 flex flex-col space-y-2">
       <div className="flex items-center space-x-2">
