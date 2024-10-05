@@ -35,6 +35,7 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { auth } from '@/auth'
+import ReactMarkdown from 'react-markdown';
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'

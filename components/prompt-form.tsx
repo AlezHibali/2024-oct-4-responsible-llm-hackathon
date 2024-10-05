@@ -1,5 +1,5 @@
 'use client'
-
+import ReactMarkdown from 'react-markdown';
 import * as React from 'react'
 import Textarea from 'react-textarea-autosize'
 
@@ -17,6 +17,7 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { useRouter } from 'next/navigation'
+import { BotMessage } from '@/components/stocks'
 
 export function PromptForm({
   input,
@@ -43,10 +44,9 @@ export function PromptForm({
 
   // Function to handle submitting the database URL
   const handleDbSubmit = async () => {
-    if (!dbURL.trim()) return // If the dbURL is empty, do nothing
-
+    if (!dbURL.trim()) return; // If the dbURL is empty, do nothing
+  
     try {
-      // Send a POST request to the backend endpoint with the dbURL
       const response = await fetch('http://3.81.138.29:5000/api/set_db_link', {
         method: 'POST',
         headers: {
@@ -54,18 +54,53 @@ export function PromptForm({
         },
         body: JSON.stringify({ db_link: dbURL.trim() })
       });
-    
+  
       const result = await response.json();
-
+  
       if (result.status === 'Connected') {
-          alert(result.message);
+        const connectionMessage = {
+          id: nanoid(),
+          display: (
+            <UserMessage>
+              <ReactMarkdown>{`DB Link Response: ${result.message}`}</ReactMarkdown>
+            </UserMessage>
+          )
+        };
+  
+        setMessages(currentMessages => [...currentMessages, connectionMessage]);
+  
+        if (result.data && result.data.length > 0) {
+          const dataMessage = {
+            id: nanoid(),
+            display: (
+              <UserMessage>
+                <ReactMarkdown>{`${JSON.stringify(result.data, null, 2).replace(/\\n/g, '\n')}`}</ReactMarkdown> {/* Using replace to handle newlines */}
+              </UserMessage>
+            )
+          };
+  
+          setMessages(currentMessages => [...currentMessages, dataMessage]);
+        } else {
+          const noDataMessage = {
+            id: nanoid(),
+            display: (
+              <BotMessage>
+                <ReactMarkdown>{`No data found.`}</ReactMarkdown>
+              </BotMessage>
+            )
+          };
+  
+          setMessages(currentMessages => [...currentMessages, noDataMessage]);
+        }
       } else {
-          alert(result.message);
+        alert(result.message);
       }
     } catch (error) {
-      alert('Error: ' + error); // Alert any network or other errors
+      alert('Error: ' + error);
     }
-  }
+  };
+  
+  
 
   return (
     <form
