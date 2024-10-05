@@ -84,9 +84,9 @@ export function PromptForm({
           const noDataMessage = {
             id: nanoid(),
             display: (
-              <BotMessage>
+              <UserMessage>
                 <ReactMarkdown>{`No data found.`}</ReactMarkdown>
-              </BotMessage>
+              </UserMessage>
             )
           };
   
