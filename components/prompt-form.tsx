@@ -62,7 +62,7 @@ export function PromptForm({
           id: nanoid(),
           display: (
             <UserMessage>
-              <ReactMarkdown>{`DB Link Response: ${result.message}`}</ReactMarkdown>
+              <ReactMarkdown>{`Database Connection Response: ${result.message}`}</ReactMarkdown>
             </UserMessage>
           )
         };
