@@ -152,7 +152,7 @@ async function submitUserMessage(content: string) {
       <div key={nanoid()}>
         <h4>Data:</h4>
         <ul>
-          {responseData.data.map((item, index) => (
+          {responseData.data.map((item: any, index: number) => (
             <li key={index}>{JSON.stringify(item)}</li> // Adjust how you want to display each item
           ))}
         </ul>
