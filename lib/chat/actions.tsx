@@ -35,7 +35,8 @@ import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
 import { auth } from '@/auth'
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown from 'react-markdown'
+import DynamicTable from 'components/dynamictable'
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -124,41 +125,38 @@ async function submitUserMessage(content: string) {
     ]
   })
 
-  let textNodes: React.ReactNode[] = []; // Array to hold all text nodes
+  let textNodes: React.ReactNode[] = []
 
-  // Replace the following with a fetch call to your endpoint
   const result = await fetch('http://3.81.138.29:5000/api/query', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_input: content }) // Assuming your API accepts this format
+    body: JSON.stringify({ user_input: content })
   })
 
-  const responseData = await result.json(); // Adjust based on your endpoint's response structure
-// Check if there's a message and render it
+  const responseData = await result.json()
+
   if (responseData.message) {
-    textNodes.push(<BotMessage key={nanoid()} content={responseData.message} />);
+    textNodes.push(<BotMessage key={nanoid()} content={responseData.message} />)
   }
 
-  // Render the SQL query if it exists
   if (responseData.sql_query) {
-    textNodes.push(<BotMessage key={nanoid()} content={`SQL Query: ${responseData.sql_query}`} />);
+    textNodes.push(<BotMessage key={nanoid()} content={`SQL Query: ${responseData.sql_query}`} />)
   }
 
-  // Render the data if it exists
-  if (responseData.data && responseData.data.length > 0) {
-    textNodes.push(
-      <div key={nanoid()}>
-        <h4>Data:</h4>
-        <ul>
-          {responseData.data.map((item: any, index: number) => (
-            <li key={index}>{JSON.stringify(item)}</li> // Adjust how you want to display each item
-          ))}
-        </ul>
+  textNodes.push(
+    <BotCard key={nanoid()}>
+      <h4 className="mb-2 text-lg font-semibold">Data:</h4>
+      <div className="overflow-x-auto" style={{ maxWidth: '100%' }}>
+        {responseData.data && responseData.data.length > 0 ? (
+          <DynamicTable data={responseData.data} />
+        ) : (
+          <p className="text-gray-500 italic">No data available for this query.</p>
+        )}
       </div>
-    );
-  }
+    </BotCard>
+  )
 
   aiState.done({
     ...aiState.get(),
@@ -167,17 +165,16 @@ async function submitUserMessage(content: string) {
       {
         id: nanoid(),
         role: 'assistant',
-        content: responseData.message // Store the assistant's content
+        content: responseData.message
       }
     ]
-  });
+  })
 
   return {
     id: nanoid(),
-    display: textNodes // Return all text nodes
-  };
+    display: textNodes
+  }
 }
-
 
 export type AIState = {
   chatId: string
@@ -252,23 +249,18 @@ export const getUIStateFromAIState = (aiState: Chat) => {
           message.content.map(tool => {
             return tool.toolName === 'listStocks' ? (
               <BotCard>
-                {/* TODO: Infer types based on the tool result*/}
-                {/* @ts-expect-error */}
                 <Stocks props={tool.result} />
               </BotCard>
             ) : tool.toolName === 'showStockPrice' ? (
               <BotCard>
-                {/* @ts-expect-error */}
                 <Stock props={tool.result} />
               </BotCard>
             ) : tool.toolName === 'showStockPurchase' ? (
               <BotCard>
-                {/* @ts-expect-error */}
                 <Purchase props={tool.result} />
               </BotCard>
             ) : tool.toolName === 'getEvents' ? (
               <BotCard>
-                {/* @ts-expect-error */}
                 <Events props={tool.result} />
               </BotCard>
             ) : null

@@ -1,97 +1,21 @@
-'use client'
+import React from 'react';
+import DynamicTable from '../components/dynamictable';
 
-import { useFormState, useFormStatus } from 'react-dom'
-import { authenticate } from '@/app/login/actions'
-import Link from 'next/link'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
-import { IconSpinner } from './ui/icons'
-import { getMessageFromCode } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
-
-export default function LoginForm() {
-  const router = useRouter()
-  const [result, dispatch] = useFormState(authenticate, undefined)
-
-  useEffect(() => {
-    if (result) {
-      if (result.type === 'error') {
-        toast.error(getMessageFromCode(result.resultCode))
-      } else {
-        toast.success(getMessageFromCode(result.resultCode))
-        router.refresh()
-      }
-    }
-  }, [result, router])
+const App = () => {
+  const sampleData = [
+    {"champion_kills_per_game":"12.71","combat_score":1000,"epic_monster_killed_per_game":"4.60","first_baron_rate":"0.61","league":"Worlds","match_numbers":137,"net_building_destroyed_per_game":"2.93","rank":1,"reference_label":"T1","region":"INTERNATIONAL","team_acronym":"T1","team_capital_letter":"T","team_name":"T1","vision_scores_per_game":"161.99","winning_rate":"0.61"},
+    {"champion_kills_per_game":"14.13","combat_score":895,"epic_monster_killed_per_game":"4.50","first_baron_rate":"0.58","league":"Worlds","match_numbers":123,"net_building_destroyed_per_game":"3.86","rank":2,"reference_label":"Gen.G","region":"INTERNATIONAL","team_acronym":"GEN","team_capital_letter":"G","team_name":"Gen.G","vision_scores_per_game":"162.84","winning_rate":"0.72"},
+    {"champion_kills_per_game":"13.13","combat_score":809,"epic_monster_killed_per_game":"4.30","first_baron_rate":"0.62","league":"LCK","match_numbers":114,"net_building_destroyed_per_game":"3.25","rank":3,"reference_label":"kt Rolster","region":"KOREA","team_acronym":"KT","team_capital_letter":"K","team_name":"kt Rolster","vision_scores_per_game":"154.69","winning_rate":"0.69"},
+    {"champion_kills_per_game":"11.31","combat_score":807,"epic_monster_killed_per_game":"3.85","first_baron_rate":"0.47","league":"Worlds","match_numbers":107,"net_building_destroyed_per_game":"0.62","rank":4,"reference_label":"Hanwha Life Esports","region":"INTERNATIONAL","team_acronym":"HLE","team_capital_letter":"H","team_name":"Hanwha Life Esports","vision_scores_per_game":"169.41","winning_rate":"0.55"},
+    {"champion_kills_per_game":"12.06","combat_score":709,"epic_monster_killed_per_game":"4.54","first_baron_rate":"0.57","league":"Worlds","match_numbers":87,"net_building_destroyed_per_game":"1.86","rank":5,"reference_label":"Dplus Kia","region":"INTERNATIONAL","team_acronym":"DK","team_capital_letter":"D","team_name":"Dplus Kia","vision_scores_per_game":"164.29","winning_rate":"0.59"}
+     ];
 
   return (
-    <form
-      action={dispatch}
-      className="flex flex-col items-center gap-4 space-y-3"
-    >
-      <div className="w-full flex-1 rounded-lg border bg-white px-6 pb-4 pt-8 shadow-md  md:w-96 dark:bg-zinc-950">
-        <h1 className="mb-3 text-2xl font-bold">Please log in to continue.</h1>
-        <div className="w-full">
-          <div>
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-zinc-400"
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email address"
-                required
-              />
-            </div>
-          </div>
-          <div className="mt-4">
-            <label
-              className="mb-3 mt-5 block text-xs font-medium text-zinc-400"
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <div className="relative">
-              <input
-                className="peer block w-full rounded-md border bg-zinc-50 px-2 py-[9px] text-sm outline-none placeholder:text-zinc-500 dark:border-zinc-800 dark:bg-zinc-950"
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-                minLength={6}
-              />
-            </div>
-          </div>
-        </div>
-        <LoginButton />
-      </div>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Team Statistics</h1>
+      <DynamicTable data={sampleData} />
+    </div>
+  );
+};
 
-      <Link
-        href="/signup"
-        className="flex flex-row gap-1 text-sm text-zinc-400"
-      >
-        No account yet? <div className="font-semibold underline">Sign up</div>
-      </Link>
-    </form>
-  )
-}
-
-function LoginButton() {
-  const { pending } = useFormStatus()
-
-  return (
-    <button
-      className="my-4 flex h-10 w-full flex-row items-center justify-center rounded-md bg-zinc-900 p-2 text-sm font-semibold text-zinc-100 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-      aria-disabled={pending}
-    >
-      {pending ? <IconSpinner /> : 'Log in'}
-    </button>
-  )
-}
+export default App;
