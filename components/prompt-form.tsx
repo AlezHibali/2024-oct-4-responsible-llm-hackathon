@@ -53,16 +53,17 @@ export function PromptForm({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ db_link: dbURL.trim() })
-      })
+      });
+    
+      const result = await response.json();
 
-      if (!response.ok) {
-        console.error('Failed to set DB link') // Log an error if the request fails
+      if (result.status === 'Connected') {
+          alert(result.message);
       } else {
-        console.log('DB link set successfully') // Log success if the request succeeds
-        console.log('show the response message', response.text())
+          alert(result.message);
       }
     } catch (error) {
-      console.error('Error:', error) // Log any network or other errors
+      alert('Error: ' + error); // Alert any network or other errors
     }
   }
 
@@ -96,22 +97,7 @@ export function PromptForm({
       }}
     >
       <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute left-0 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
-              onClick={() => {
-                router.push('/new') // Navigate to the new chat page
-              }}
-            >
-              <IconPlus />
-              <span className="sr-only">New Chat</span> {/* Screen reader text for accessibility */}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>New Chat</TooltipContent>
-        </Tooltip>
+
         <Textarea
           ref={inputRef}
           tabIndex={0}
