@@ -47,7 +47,7 @@ export function PromptForm({
     if (!dbURL.trim()) return; // If the dbURL is empty, do nothing
   
     try {
-      const response = await fetch('http://3.81.138.29:5000/api/set_db_link', {
+      const response = await fetch('https://3.81.138.29:5000/api/set_db_link', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

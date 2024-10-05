@@ -127,7 +127,7 @@ async function submitUserMessage(content: string) {
   let textNodes: React.ReactNode[] = []; // Array to hold all text nodes
 
   // Replace the following with a fetch call to your endpoint
-  const result = await fetch('http://3.81.138.29:5000/api/query', {
+  const result = await fetch('https://3.81.138.29:5000/api/query', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
